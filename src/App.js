@@ -10,6 +10,7 @@ function App() {
   const inputRef = useRef(null)
   const draggingItem = useRef();
   const dragOverItem = useRef();
+  const [drag, setDrag] = useState(false)
   const [model, setmodel] = useState(false)
 
   useEffect(() => {
@@ -39,6 +40,7 @@ function App() {
   const handleDragStart = (e, position) => {
     draggingItem.current = position;
     console.log(draggingItem.current, 'kekw')
+    setDrag(true)
   }
 
   const handleDragEnter = (e, position) => {
@@ -65,35 +67,38 @@ function App() {
   const handleDragEnd = (e) => {
     const puzzlelist = [...shuffledArray]
     const draggingItemContent = puzzlelist[draggingItem.current];
-    puzzlelist.splice(draggingItem.current, 1);
-    puzzlelist.splice(dragOverItem.current, 0, draggingItemContent);
+    const dragOverItemCurrent = puzzlelist[dragOverItem.current];
+    console.log(puzzlelist, 'before')
+    puzzlelist[draggingItem.current] = dragOverItemCurrent;
+    puzzlelist[dragOverItem.current] = draggingItemContent;
     draggingItem.current = null;
     dragOverItem.current = null;
     setShuffledArr(puzzlelist);
     localStorage.setItem("puzzle", JSON.stringify(puzzlelist));
     puzzleOrder(puzzlelist)
+    setDrag(false)
   }
 
 
   // console.log(model)
 
-  const colsSet = (e) => {
-    if (inputRef.current.value <= 6 && inputRef.current.value >= 2) {
-      if (e.key === 'Enter' && e.target.value <= 6 && e.target.value >= 2) {
-        setCols(e.target.value)
-      } else if (e.type === 'click') {
-        const current = inputRef.current.value;
-        setCols(current)
-      }
-    }
-    e.target.value = '';
-  }
+  // const colsSet = (e) => {
+  //   if (inputRef.current.value <= 6 && inputRef.current.value >= 2) {
+  //     if (e.key === 'Enter' && e.target.value <= 6 && e.target.value >= 2) {
+  //       setCols(e.target.value)
+  //     } else if (e.type === 'click') {
+  //       const current = inputRef.current.value;
+  //       setCols(current)
+  //     }
+  //   }
+  //   e.target.value = '';
+  // }
   
   const setColsVal = (e) => {
     e.preventDefault()
     console.log('hello')
     const current = inputRef.current.value;
-    setCols(current)
+    setCols(current);
     setpuzzle(true);
     const newCols = current;
     if (newCols >= 2 && newCols <= 6) {
@@ -120,7 +125,7 @@ function App() {
         </form>
       </div>
       <br />
-      {puzzle && cols == '2' && <div className={`grid p-[24px] justify-items-center gap-[24px] grid-cols-2 max-w-[75%] mx-auto w-full border-solid border-[8px] min-h-[300px] rounded-[12px] border-red-400`}>
+      {puzzle && cols == '2' && <div className={`${drag ? "bg-[gray]/10" : ""} grid p-[24px] justify-items-center gap-[24px] grid-cols-2 max-w-[75%] mx-auto w-full border-solid border-[8px] min-h-[300px] rounded-[12px] border-red-400`}>
         {shuffledArray.map((num, index) => {
           return (
             <div onDragOver={(e) => e.preventDefault()} onDragEnd={handleDragEnd} onDragEnter={(e) => handleDragEnter(e, index)} onDragStart={(e) => handleDragStart(e, index)} draggable={true} key={index} className="text-white  hover:cursor-move hover:border-red-400 rounded-[8px] hover:bg-blue-400/70 font-semibold min-h-[120px] text-center border-[4px] border-solid border-[#e5e7eb] max-w-[128px] bg-blue-400 w-full text-[36px]">
@@ -129,7 +134,7 @@ function App() {
           )
         })}
       </div>}
-      {puzzle && cols == '3' && <div className={`grid p-[24px] justify-items-center gap-[24px] grid-cols-3 max-w-[75%] mx-auto w-full border-solid border-[8px] min-h-[300px] rounded-[12px] border-red-400`}>
+      {puzzle && cols == '3' && <div className={`${drag ? "bg-[gray]/10" : ""} grid p-[24px] justify-items-center gap-[24px] grid-cols-3 max-w-[75%] mx-auto w-full border-solid border-[8px] min-h-[300px] rounded-[12px] border-red-400`}>
         {shuffledArray.map((num, index) => {
           return (
             <div onDragOver={(e) => e.preventDefault()} onDragEnd={handleDragEnd} onDragEnter={(e) => handleDragEnter(e, index)} onDragStart={(e) => handleDragStart(e, index)} draggable={true} key={index} className="text-white  hover:cursor-move hover:border-red-400 rounded-[8px] hover:bg-blue-400/70 font-semibold min-h-[120px] text-center border-[4px] border-solid border-[#e5e7eb] max-w-[128px] bg-blue-400 w-full text-[36px]">
@@ -138,7 +143,7 @@ function App() {
           )
         })}
       </div>}
-      {puzzle === true && cols == '4' && <div className={`grid p-[24px] justify-items-center gap-[24px] grid-cols-4 max-w-[75%] mx-auto w-full border-solid border-[8px] min-h-[300px] rounded-[12px] border-red-400`}>
+      {puzzle === true && cols == '4' && <div className={`${drag ? "bg-[gray]/10" : ""} grid p-[24px] justify-items-center gap-[24px] grid-cols-4 max-w-[75%] mx-auto w-full border-solid border-[8px] min-h-[300px] rounded-[12px] border-red-400`}>
         {shuffledArray.map((num, index) => {
           return (
             <div onDragOver={(e) => e.preventDefault()} onDragEnd={handleDragEnd} onDragEnter={(e) => handleDragEnter(e, index)} onDragStart={(e) => handleDragStart(e, index)} draggable={true} key={index} className="text-white  hover:cursor-move hover:border-red-400 rounded-[8px] hover:bg-blue-400/70 font-semibold min-h-[120px] text-center border-[4px] border-solid border-[#e5e7eb] max-w-[128px] bg-blue-400 w-full text-[36px]">
@@ -147,7 +152,7 @@ function App() {
           )
         })}
       </div>}
-      {puzzle && cols == '5' && <div className={`grid p-[24px] justify-items-center gap-[24px] grid-cols-5 max-w-[75%] mx-auto w-full border-solid border-[8px] min-h-[300px] rounded-[12px] border-red-400`}>
+      {puzzle && cols == '5' && <div className={`${drag ? "bg-[gray]/10" : ""} grid p-[24px] justify-items-center gap-[24px] grid-cols-5 max-w-[75%] mx-auto w-full border-solid border-[8px] min-h-[300px] rounded-[12px] border-red-400`}>
         {shuffledArray.map((num, index) => {
           return (
             <div onDragOver={(e) => e.preventDefault()} onDragEnd={handleDragEnd} onDragEnter={(e) => handleDragEnter(e, index)} onDragStart={(e) => handleDragStart(e, index)} draggable={true} key={index} className="text-white  hover:cursor-move hover:border-red-400 rounded-[8px] hover:bg-blue-400/70 font-semibold min-h-[120px] text-center border-[4px] border-solid border-[#e5e7eb] max-w-[128px] bg-blue-400 w-full text-[36px]">
@@ -156,7 +161,7 @@ function App() {
           )
         })}
       </div>}
-      {puzzle && cols == '6' && <div className={`grid p-[24px] justify-items-center gap-[24px] grid-cols-6 max-w-[75%] mx-auto w-full border-solid border-[8px] min-h-[300px] rounded-[12px] border-red-400`}>
+      {puzzle && cols == '6' && <div className={`${drag ? "bg-[gray]/10" : ""} grid p-[24px] justify-items-center gap-[24px] grid-cols-6 max-w-[75%] mx-auto w-full border-solid border-[8px] min-h-[300px] rounded-[12px] border-red-400`}>
         {shuffledArray.map((num, index) => {
           return (
             <div onDragOver={(e) => e.preventDefault()} onDragEnd={handleDragEnd} onDragEnter={(e) => handleDragEnter(e, index)} onDragStart={(e) => handleDragStart(e, index)} draggable={true} key={index} className="text-white  hover:cursor-move hover:border-red-400 rounded-[8px] hover:bg-blue-400/70 font-semibold min-h-[120px] text-center border-[4px] border-solid border-[#e5e7eb] max-w-[128px] bg-blue-400 w-full text-[36px]">
