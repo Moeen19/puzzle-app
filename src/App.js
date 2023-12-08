@@ -107,10 +107,11 @@ function App() {
       const newShuffledArr = newnums.sort((a, b) => 0.5 - Math.random());
       localStorage.setItem("puzzle", JSON.stringify(newShuffledArr));
     }
+    inputRef.current.value = '';
   }
 
   return (
-    <div className="w-full p-7 relative">
+    <div className={`${drag ? "bg-[gray]/10 h-screen" : ""} w-full p-7 relative`}>
       {model && <div className="h-screen bg-[gray]/20 inset-0 w-screen absolute">
         <div className="m-auto mt-[200px] flex flex-col items-center w-fit">
           <h1 className="text-[60px] font-bold">Welcome to the team!</h1>
