@@ -75,7 +75,7 @@ function App() {
   }
 
 
-  console.log(model)
+  // console.log(model)
 
   const colsSet = (e) => {
     if (inputRef.current.value <= 6 && inputRef.current.value >= 2) {
@@ -88,13 +88,16 @@ function App() {
     }
     e.target.value = '';
   }
-
+  
   const setColsVal = (e) => {
-    e.preventDefault();
-    console.log(e)
+    e.preventDefault()
+    console.log('hello')
+    const current = inputRef.current.value;
+    setCols(current)
     setpuzzle(true);
-    if (cols >= 2 && cols <= 6) {
-      const newnums = numbers.slice(0, cols * cols);
+    const newCols = current;
+    if (newCols >= 2 && newCols <= 6) {
+      const newnums = numbers.slice(0, newCols * newCols);
       setShuffledArr(newnums.sort((a, b) => 0.5 - Math.random()));
       const newShuffledArr = newnums.sort((a, b) => 0.5 - Math.random());
       localStorage.setItem("puzzle", JSON.stringify(newShuffledArr));
@@ -112,8 +115,8 @@ function App() {
       <div className="w-full  p-[12px]">
         <form onSubmit={setColsVal} className="flex items-center justify-center">
           <h1 className="text-red-400 font-bold text-[20px] mr-[8px]">ENTER PUZZLE SIZE :</h1>
-          <input onKeyPress={colsSet} ref={inputRef} onSubmit={setColsVal} className="max-w-[320px] w-full border-[1px] mr-[6px] p-4 max-h-[48px] outline-none border-solid border-[#ef4444] rounded-[8px]" placeholder="Enter Puzzle Size" type="number" min={2} max={6} />
-          <button onClick={colsSet} onSubmit={setColsVal} className="p-1 min-h-[48px] font-semibold max-w-[96px] w-full text-white bg-red-400 rounded-[8px]">Create!</button>
+          <input  ref={inputRef} onSubmit={setColsVal} className="max-w-[320px] w-full border-[1px] mr-[6px] p-4 max-h-[48px] outline-none border-solid border-[#ef4444] rounded-[8px]" placeholder="Enter Puzzle Size" type="number" min={2} max={6} />
+          <button onSubmit={setColsVal} className="p-1 min-h-[48px] font-semibold max-w-[96px] w-full text-white bg-red-400 rounded-[8px]">Create!</button>
         </form>
       </div>
       <br />
